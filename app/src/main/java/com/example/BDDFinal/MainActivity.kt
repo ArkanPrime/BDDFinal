@@ -227,12 +227,8 @@ fun RegisterScreen(
                 label = { Text("Email") },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = interests,
-                onValueChange = { interests = it },
-                label = { Text("Centres d'intérêts") },
-                modifier = Modifier.fillMaxWidth()
-            )
+            InterestsSelection(interests = interests, onInterestsChange = { interests = it })
+
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
@@ -548,5 +544,52 @@ fun EditablePlanningSlot(
                 }
             }
         )
+    }
+}
+
+
+@Composable
+fun InterestsSelection(
+    interests: String,
+    onInterestsChange: (String) -> Unit
+) {
+    var sportChecked by remember { mutableStateOf(false) }
+    var musiqueChecked by remember { mutableStateOf(false) }
+    var lectureChecked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(sportChecked, musiqueChecked, lectureChecked) {
+        val selected = mutableListOf<String>()
+        if (sportChecked) selected.add("Sport")
+        if (musiqueChecked) selected.add("Musique")
+        if (lectureChecked) selected.add("Lecture")
+        onInterestsChange(selected.joinToString(", "))
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Checkbox(
+                checked = sportChecked,
+                onCheckedChange = { sportChecked = it }
+            )
+            Text(text = "Sport")
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Checkbox(
+                checked = musiqueChecked,
+                onCheckedChange = { musiqueChecked = it }
+            )
+            Text(text = "Musique")
+        }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Checkbox(
+                checked = lectureChecked,
+                onCheckedChange = { lectureChecked = it }
+            )
+            Text(text = "Lecture")
+        }
     }
 }
